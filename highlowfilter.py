@@ -7,7 +7,7 @@ fL = 4410  # Cutoff frequency.
 N = 59  # Filter length, must be odd.
 
 #Takes in a wav array and a window type
-def lowpassFilter(X, windowType):
+def lowpassFilter(X, windowType="Blackman"):
 	sincFilter = np.sinc(2 * fL / fS * (np.arange(N) - (N - 1) / 2.))
 
 	if windowType == "Blackman":
@@ -20,7 +20,7 @@ def lowpassFilter(X, windowType):
 	return np.convolve(X,sincFilter)
 
 #Takes in a wav array and a window type
-def highpassFilter(X,windowType):
+def highpassFilter(X,windowType="Blackman"):
 	sincFilter = np.sinc(2 * fL / fS * (np.arange(N) - (N - 1) / 2.))
 
 	if windowType == "Blackman":
@@ -37,7 +37,7 @@ def highpassFilter(X,windowType):
 	return np.convolve(X,sincFilter)
 
 #Takes in a wav array and a window type
-def bandPassFilter(X, windowType):
+def bandPassFilter(X, windowType="Blackman"):
 	low = np.sinc(2 * fL / fS * (np.arange(N) - (N - 1) / 2.))
 
 	if windowType == "Blackman":
@@ -53,7 +53,7 @@ def bandPassFilter(X, windowType):
 	return np.convolve(X, bandPass)
 
 #Takes in a wav array and a window type
-def bandRejectFilter(X, windowType):
+def bandRejectFilter(X, windowType="Blackman"):
 	low = np.sinc(2 * fL / fS * (np.arange(N) - (N - 1) / 2.))
 
 	if windowType == "Blackman":
@@ -68,37 +68,37 @@ def bandRejectFilter(X, windowType):
 	bandReject =  low + high
 	return np.convolve(X, bandReject)
 
+def displaySignals(wave):
+	#Original Signal
+	au.displaySignal(wave)
+	#Low Pass
+	au.displaySignal(lowpassFilter(wave))
+	#High Pass
+	au.displaySignal(lowpassFilter(wave))
+	#Band Pass
+	au.displaySignal(bandPassFilter(wave))
+	#Band Reject
+	au.displaySignal(bandRejectFilter(wave))
 
-#Unit Testing
-test1 = au.readWaveFile("Beethoven.Ninth.wav")
-test2 = au.readWaveFile("BluesGuitar.wav")
-test3 = au.readWaveFile("Clarinet01_01.wav")
-test4 = au.readWaveFile("BassGuitar.wav")
-test5 = au.readWaveFile("Beethoven.Sixth.wav")
-test6 = au.readWaveFile("Genesis01.wav")
-test7 = au.readWaveFile("BitesDust.wav")
-
-#Blackman window
-ret1 = lowpassFilter(test7,"Blackman")
-au.writeWaveFile("LowPassTest.wav",ret1)
-ret2 = highpassFilter(test7, "Blackman")
-au.writeWaveFile("HighPassTest.wav",ret2)
-ret3 = bandPassFilter(test7, "Blackman")
-au.writeWaveFile("BandPassTest.wav",ret3)
-ret4 = bandRejectFilter(test7, "Blackman")
-au.writeWaveFile("BandRejectTest.wav",ret4)
-
-#Hanning window
-# ret1 = lowpassFilter(test,"Hanning")
-# au.writeWaveFile("LowPassTestHanning.wav",ret1)
-# ret2 = highpassFilter(test, "Hanning")
-# au.writeWaveFile("HighPassTestHanning.wav",ret2)
-# ret3 = bandPassFilter(test, "Hanning")
-# au.writeWaveFile("BandPassFilterTestHanning.wav",ret3)
-# ret4 = bandRejectFilter(test, "Hanning")
-# au.writeWaveFile("BandRejectFilterTestHanning.wav",ret4)
+def writeAudioFilters(wave, filename):
+	au.writeWaveFile(filename + "Low.wav",lowpassFilter(wave))
+	au.writeWaveFile(filename + "High.wav",highpassFilter(wave))
+	au.writeWaveFile(filename + "BandPass.wav", bandPassFilter(wave))
+	au.writeWaveFile(filename + "BandReject.wav", bandRejectFilter(wave))
 
 
+def main(file, displaySignal=False):
+	filename = file.split(".wav")[0]
+	wave = au.readWaveFile(file)
+	if(displaySignal):
+		displaySignals(wave)
+	writeAudioFilters(wave, filename)
 
-
+#Unit Tests
+main("Beethoven.Ninth.wav")
+# main("BluesGuitar.wav")
+# main("Clarinet01_01.wav")
+# main("BassGuitar.wav")
+# main("Genesis01.wav")
+# main("BitesDust.wav")
 
