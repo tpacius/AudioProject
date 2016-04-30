@@ -1,6 +1,8 @@
 import numpy as np
 import audioUtilities as au
 
+#Reverb, EQing, Compression, np.fft, np.ifft
+
 # Configuration.
 fS = 44100  # Sampling rate.
 fL = 4410  # Cutoff frequency.
@@ -94,8 +96,20 @@ def main(file, displaySignal=False):
 		displaySignals(wave)
 	writeAudioFilters(wave, filename)
 
+# def realFFT(X):
+#     return [2.0 * np.absolute(x)/len(X) for x in np.fft.rfft(X)]
+
+# signal = realFFT(au.readWaveFile("BassGuitar.wav"))
+# print(signal)
+
+# signal = au.readWaveFile("BassGuitar.wav")#[0:50]
+# # print(signal)
+# signal = np.fft.rfft(signal)
+# # signal = np.fft.irfft(signal)
+# print(signal.real)
+
 #Unit Tests
-main("Beethoven.Ninth.wav")
+# main("Beethoven.Ninth.wav")
 # main("BluesGuitar.wav")
 # main("Clarinet01_01.wav")
 # main("BassGuitar.wav")
