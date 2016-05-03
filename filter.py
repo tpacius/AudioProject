@@ -54,5 +54,6 @@ def main(file, displaySignal=False):
 		displaySignals(wave)
 	writeAudioFilters(wave, filename)
 
-main("BassGuitar.wav")
+# main("BassGuitar.wav")
+main('Bach.wav')
 
