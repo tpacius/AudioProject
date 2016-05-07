@@ -39,9 +39,9 @@ def compress_wav(filename, threshLimit, ratio):
 
 
 test = au.readWaveFile("Bn.wav")
-test_compress = compress_wav("Bn.wav", 2, 2)
+test_compress = compress_wav("Bn.wav", 3, 2)
 #
-au.displaySignal(test)
+# au.displaySignal(test)
 au.displaySignal(test_compress)
 # au.writeWaveFile("BnNew2.wav", test_compress)
 
