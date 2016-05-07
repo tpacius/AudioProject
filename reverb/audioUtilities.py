@@ -10,7 +10,7 @@ import array
 import contextlib
 import wave
 import math
-import cmath 
+import cmath
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy import pi
@@ -30,7 +30,7 @@ windowSlide   = 2205
 
 
 
-# File I/O        
+# File I/O
 
 # Read a wave file and return the entire file as a standard array
 
@@ -47,13 +47,13 @@ def readWaveFile(infile,withParams=False,asNumpy=False):
             print("Warning in reading file: must be 44100 sample rate!")
     if asNumpy:
         X = np.array(frames,dtype='int16')
-    else:  
+    else:
         X = array.array('h', frames)
     if withParams:
         return X,params
     else:
         return X
-         
+
 
 
 # Write an array X; since the wave library can not deal with
@@ -68,7 +68,7 @@ def writeWaveFile(fname, X):
         f.setparams(params)
         f.writeframes(data.tobytes())
     print(fname + " written.")
-    
+
 
 
 # round to 4 decimal places
@@ -76,7 +76,7 @@ def writeWaveFile(fname, X):
 def round4(x):
     return round(x+0.00000000001,4)
 
-"""    
+"""
 Display a signal with various options
 
    xUnits are scale of x axis: "Seconds" (default), "Milliseconds", or "Samples"
@@ -89,10 +89,10 @@ Display a signal with various options
 
 def displaySignal(X, left = 0, right = -1, xUnits = "Seconds", yUnits = "Relative",width=10):
 
-        
+
     minAmplitude = -(2**15 + 100)        # just to improve visibility of curve
-    maxAmplitude = 2**15 + 300    
-    
+    maxAmplitude = 2**15 + 300
+
     if(xUnits == "Sample"):
         if(right == -1):
             right = len(X)
@@ -112,7 +112,7 @@ def displaySignal(X, left = 0, right = -1, xUnits = "Seconds", yUnits = "Relativ
         Y = X[leftSampleNum:(leftSampleNum + len(T))]
     else:
         print("Illegal value for xUnits")
-        
+
     if(yUnits == "Relative"):
         minAmplitude = -1.003            # just to improve visibility of curve
         maxAmplitude = 1.01
@@ -126,21 +126,21 @@ def displaySignal(X, left = 0, right = -1, xUnits = "Seconds", yUnits = "Relativ
     ax.set_ylim([minAmplitude,maxAmplitude])
     ax.set_xlim([left, right])
     plt.axhline(0, color='black')      # draw the 0 line in black
-    plt.plot(T,Y) 
+    plt.plot(T,Y)
     if(    (xUnits == "Samples" and (right - left) < 44)
         or (xUnits == "Seconds" and (right - left) < 0.001)
         or (xUnits == "Milliseconds" and (right - left) < 1) ):
-            plt.plot(T,Y, 'bo')                     
+            plt.plot(T,Y, 'bo')
     plt.grid(True)                     # if you want dotted grid lines
     plt.show()
-    
-""" 
+
+"""
 #    If want to use interactive window, type
 #         #matplotlib qt
 #    to console; to get back to inline mode, type
 #         #matplotlib inline
 #    to console; then use following in place of plt.show()
-    
+
     mngr = plt.get_current_fig_manager()
     geom = mngr.window.geometry()
     x,y,dx,dy = geom.getRect()
@@ -148,28 +148,28 @@ def displaySignal(X, left = 0, right = -1, xUnits = "Seconds", yUnits = "Relativ
     plt.show()
     fig.canvas.manager.window.raise_()
 """
-    
-    
 
-  
-# some useful spectra    
+
+
+
+# some useful spectra
 
 def makeSpectrum(instr,freq=1):
     if(instr=="clarinet"):
-        return [(freq,0.314,0.0), 
-        (freq*3,.236,0.0), 
-        (freq*5,0.157,0.0), 
-        (freq*7,0.044,0.0), 
-        (freq*9,0.157,0.0), 
-        (freq*11,0.038,0.0), 
-        (freq*13,0.053,0.0)]  
+        return [(freq,0.314,0.0),
+        (freq*3,.236,0.0),
+        (freq*5,0.157,0.0),
+        (freq*7,0.044,0.0),
+        (freq*9,0.157,0.0),
+        (freq*11,0.038,0.0),
+        (freq*13,0.053,0.0)]
     elif(instr=="bell"):
-        return [(freq,0.1666,0.0), 
-        (freq*2,0.1666,0.0), 
-        (freq*3,0.1666,0.0), 
-        (freq*4.2,0.1666,0.0), 
-        (freq*5.4,0.1666,0.0), 
-        (freq*6.8,0.1666,0.0)]  
+        return [(freq,0.1666,0.0),
+        (freq*2,0.1666,0.0),
+        (freq*3,0.1666,0.0),
+        (freq*4.2,0.1666,0.0),
+        (freq*5.4,0.1666,0.0),
+        (freq*6.8,0.1666,0.0)]
     elif(instr=="steelstring"):
         return [(freq*0.7272, .00278,0.0),
                 (freq, .0598,0.0),
@@ -189,13 +189,13 @@ def makeSpectrum(instr,freq=1):
         return []
 
 
-    
+
 # return a window by slicing a signal delimited by [begin..end) in seconds, not samples
 def sliceBySeconds(X,begin, length):
     return X[int(begin*SR):int((begin+length)*SR)]
-      
+
 # Discrete Sine Transform
-      
+
 def dst(X):
     N = len(X)
     S = [0]*N
@@ -206,3 +206,18 @@ def dst(X):
         S[f] = sum*2/N
     return S
 
+def maxabs(Y):
+    max = Y[0]
+    for i in range(len(Y)):
+        if(abs(Y[i]) > max):
+           max = abs(Y[i])
+    return max
+
+
+def getEnvelope(X,W,S):
+    N = ceil(len(X)/S)
+    E = [0]*N
+    for i in range(N):
+        w = i*S
+        E[i] = maxabs(X[w:(w+W)])
+    return E
