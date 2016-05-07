@@ -14,6 +14,7 @@ import cmath
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy import pi
+from math import ceil
 #from scipy.io.wavfile import read, write
 #from scipy import signal
 #from numpy.random import randint

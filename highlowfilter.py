@@ -115,4 +115,5 @@ def main(file, displaySignal=False):
 # main("BassGuitar.wav")
 # main("Genesis01.wav")
 # main("BitesDust.wav")
+# main("Bach.wav",displaySignal=True)
 

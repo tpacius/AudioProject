@@ -11,6 +11,9 @@ def lowpass_ifft(X, low=low, sampleRate=44100):
 	m = np.size(X)
 	spectrum = np.fft.rfft(X, n=m).real
 	low_point = int(low/sampleRate * m/2)
+	#The size of m alone will always cause an index out of bounds error but
+	#this is most likely the variable that can be altered to change the output
+	#wave
 	filtered = [spectrum[i] if i >= low_point else 0 for i in range(m//2)]
 	newSignal = np.fft.irfft(filtered, n=m)
 	return newSignal
@@ -19,6 +22,9 @@ def highpass_ifft(X, high=high, sampleRate=44100):
 	m = np.size(X)
 	spectrum = np.fft.rfft(X, n=m).real
 	high_point = int(high/sampleRate * m/2)
+	#The size of m alone will always cause an index out of bounds error but
+	#this is most likely the variable that can be altered to change the output
+	#wave
 	filtered = [spectrum[i] if i <= high_point else 0 for i in range(m//2)]
 	newSignal = np.fft.irfft(filtered, n=m)
 	return newSignal
@@ -55,5 +61,6 @@ def main(file, displaySignal=False):
 	writeAudioFilters(wave, filename)
 
 # main("BassGuitar.wav")
-main('Bach.wav')
+main("Bach.wav")
+# main('Bach.wav', displaySignal=True)
 
