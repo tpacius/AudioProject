@@ -124,7 +124,7 @@ def displaySignal(X, left = 0, right = -1, xUnits = "Seconds", yUnits = "Relativ
     ax = plt.axes()
     ax.set_xlabel(xUnits)
     ax.set_ylabel(yUnits + ' Amplitude')
-    ax.set_ylim([minAmplitude,maxAmplitude])
+    ax.set_ylim([minAmplitude, maxAmplitude])
     ax.set_xlim([left, right])
     plt.axhline(0, color='black')      # draw the 0 line in black
     plt.plot(T,Y)
